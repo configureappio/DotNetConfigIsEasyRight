@@ -34,12 +34,12 @@ namespace ConfigurationBridge.Web
             services.AddSingleton( x => new CryptoFactory().Create<AesManaged>(pwd, salt));
             services.AddSingleton<ISettingsDecrypt, SettingsDecryptor>();
             services.AddSingleton<ISettingsValidator, SettingsValidator>();
-            services.AddScoped<IAppSettingsResolved, MyAppSettingsBridge>();
+            services.AddTransient<IAppSettingsResolved, MyAppSettingsBridge>();
             
             // add the other interfaces implemented by MyAppSettingsBridge to allow for resolution by those interfaces (interface segregation)
-            services.AddScoped<IAppSettings>(provider => provider.GetService<IAppSettingsResolved>());
-            services.AddScoped<ISqlConnectionSettings>(provider => provider.GetService<IAppSettingsResolved>());
-            services.AddScoped<IOracleConnectionSettings>(provider => provider.GetService<IAppSettingsResolved>());
+            services.AddTransient<IAppSettings>(provider => provider.GetService<IAppSettingsResolved>());
+            services.AddTransient<ISqlConnectionSettings>(provider => provider.GetService<IAppSettingsResolved>());
+            services.AddTransient<IOracleConnectionSettings>(provider => provider.GetService<IAppSettingsResolved>());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
